@@ -2232,7 +2232,7 @@
                 resetBtn.addEventListener('mousedown', e => { e.stopPropagation(); resetAccPosition(id); });
                 const delBtn = document.createElement('button');
                 delBtn.className = 'acc-ctrl-btn del';
-                delBtn.textContent = '✕ Hapus';
+                delBtn.textContent = '✕ deleter';
                 delBtn.addEventListener('mousedown', e => { e.stopPropagation(); toggleAccessory(id); });
                 ctrl.append(resetBtn, delBtn);
                 el.appendChild(ctrl);
