@@ -417,7 +417,7 @@
         }
 
         .lore-ring::before {
-            content: '✦';
+            content: '\2726';
             position: absolute;
             top: 0;
             left: 50%;
@@ -787,7 +787,7 @@
         }
 
         .rm-list li::before {
-            content: '→';
+            content: '\2192';
             position: absolute;
             left: 0;
             color: var(--teal);
@@ -928,6 +928,485 @@
             pointer-events: none;
         }
 
+        /* ===== PFP GENERATOR ===== */
+        .pfp-section {
+            background: linear-gradient(180deg, var(--navy) 0%, rgba(6, 22, 40, 0.95) 50%, var(--navy) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pfp-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(0, 201, 184, 0.06), transparent 70%);
+            pointer-events: none;
+        }
+
+        .pfp-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1.3fr;
+            gap: 50px;
+            align-items: start;
+            position: relative;
+            z-index: 1;
+        }
+
+        .pfp-preview-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+            position: sticky;
+            top: 100px;
+        }
+
+        .pfp-canvas-wrap {
+            position: relative;
+            display: inline-block;
+        }
+
+        .pfp-canvas-wrap::before {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            border-radius: 50%;
+            border: 2px solid rgba(240, 180, 41, 0.3);
+            animation: spin 12s linear infinite;
+            pointer-events: none;
+        }
+
+        .pfp-canvas-wrap::after {
+            content: '\2726';
+            position: absolute;
+            top: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--gold);
+            font-size: 1rem;
+            animation: spin 12s linear infinite;
+            transform-origin: center;
+            pointer-events: none;
+        }
+
+        #pfpCanvas {
+            border-radius: 50%;
+            border: 4px solid var(--gold);
+            box-shadow: 0 0 60px rgba(240, 180, 41, 0.4), 0 0 120px rgba(0, 201, 184, 0.2), inset 0 0 60px rgba(0, 0, 0, 0.3);
+            display: block;
+            max-width: 100%;
+            width: 380px;
+            height: 380px;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 40, 60, 0.3), rgba(4, 13, 31, 0.8));
+        }
+
+        .pfp-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* ===== OVERLAY SYSTEM ===== */
+        #pfpCanvasWrap {
+            position: relative;
+            display: inline-block;
+        }
+
+        #accOverlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .acc-draggable {
+            position: absolute;
+            pointer-events: all;
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+        }
+
+        .acc-draggable:active {
+            cursor: grabbing;
+        }
+
+        .acc-draggable img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            pointer-events: none;
+            display: block;
+            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.4));
+        }
+
+        .acc-draggable .resize-handle {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: var(--gold);
+            border: 2px solid var(--navy);
+            border-radius: 50%;
+            cursor: nwse-resize;
+            pointer-events: all;
+            z-index: 10;
+            box-shadow: 0 0 8px rgba(240, 180, 41, 0.7);
+        }
+
+        .acc-draggable .resize-handle.br {
+            bottom: -6px;
+            right: -6px;
+        }
+
+        .acc-draggable .resize-handle.bl {
+            bottom: -6px;
+            left: -6px;
+            cursor: nesw-resize;
+        }
+
+        .acc-draggable .resize-handle.tr {
+            top: -6px;
+            right: -6px;
+            cursor: nesw-resize;
+        }
+
+        .acc-draggable .resize-handle.tl {
+            top: -6px;
+            left: -6px;
+            cursor: nwse-resize;
+        }
+
+        .acc-draggable .acc-controls {
+            position: absolute;
+            top: -28px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.15s;
+            pointer-events: all;
+        }
+
+        .acc-draggable:hover .acc-controls,
+        .acc-draggable.selected .acc-controls {
+            opacity: 1;
+        }
+
+        .acc-ctrl-btn {
+            background: rgba(4, 13, 31, 0.9);
+            border: 1px solid rgba(0, 201, 184, 0.4);
+            color: var(--teal2);
+            font-size: 0.65rem;
+            padding: 3px 7px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            white-space: nowrap;
+            transition: background 0.15s;
+        }
+
+        .acc-ctrl-btn:hover {
+            background: rgba(0, 201, 184, 0.15);
+        }
+
+        .acc-ctrl-btn.del {
+            color: var(--amber);
+            border-color: rgba(255, 140, 66, 0.4);
+        }
+
+        .acc-ctrl-btn.del:hover {
+            background: rgba(255, 140, 66, 0.15);
+        }
+
+        .acc-draggable.back-aura-handle {
+            border: 2px dashed rgba(0, 201, 184, 0);
+            transition: border-color 0.2s;
+        }
+
+        .acc-draggable.back-aura-handle:hover {
+            border: 2px dashed rgba(0, 201, 184, 0.5);
+        }
+
+        .pfp-btn-random {
+            background: linear-gradient(135deg, var(--gold), var(--amber));
+            color: var(--navy);
+            font-weight: 800;
+            font-size: 0.95rem;
+            padding: 12px 28px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Nunito', sans-serif;
+            box-shadow: 0 0 24px rgba(240, 180, 41, 0.4);
+            transition: all 0.2s;
+        }
+
+        .pfp-btn-random:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 6px 32px rgba(240, 180, 41, 0.6);
+        }
+
+        .pfp-btn-clear {
+            background: transparent;
+            color: var(--muted);
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: 1px solid rgba(137, 168, 184, 0.25);
+            cursor: pointer;
+            font-family: 'Nunito', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .pfp-btn-clear:hover {
+            border-color: rgba(137, 168, 184, 0.5);
+            color: var(--text);
+        }
+
+        .pfp-btn-download {
+            background: linear-gradient(135deg, var(--teal), var(--teal2));
+            color: var(--navy);
+            font-weight: 800;
+            font-size: 0.95rem;
+            padding: 12px 28px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Nunito', sans-serif;
+            box-shadow: 0 0 24px rgba(0, 201, 184, 0.4);
+            transition: all 0.2s;
+        }
+
+        .pfp-btn-download:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 6px 32px rgba(0, 201, 184, 0.6);
+        }
+
+        /* Accessory Panel */
+        .pfp-panel {
+            background: rgba(6, 17, 40, 0.7);
+            border: 1px solid rgba(0, 201, 184, 0.12);
+            border-radius: 24px;
+            padding: 28px;
+            backdrop-filter: blur(10px);
+        }
+
+        .pfp-panel-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.1rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .pfp-category {
+            margin-bottom: 24px;
+        }
+
+        .pfp-category-title {
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--teal);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pfp-category-title::before {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 201, 184, 0.3));
+        }
+
+        .pfp-category-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(0, 201, 184, 0.3), transparent);
+        }
+
+        .pfp-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            gap: 10px;
+        }
+
+        .pfp-item {
+            position: relative;
+            background: rgba(4, 13, 31, 0.6);
+            border: 2px solid rgba(0, 201, 184, 0.1);
+            border-radius: 14px;
+            padding: 8px;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pfp-item:hover {
+            border-color: rgba(0, 201, 184, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 201, 184, 0.1);
+        }
+
+        .pfp-item.active {
+            border-color: var(--gold);
+            background: rgba(240, 180, 41, 0.08);
+            box-shadow: 0 0 20px rgba(240, 180, 41, 0.15);
+        }
+
+        .pfp-item img {
+            width: 100%;
+            height: 50px;
+            object-fit: contain;
+            pointer-events: none;
+        }
+
+        .pfp-item-name {
+            font-size: 0.65rem;
+            color: var(--muted);
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 0.03em;
+            pointer-events: none;
+        }
+
+        .pfp-item.active .pfp-item-name {
+            color: var(--gold2);
+        }
+
+        .pfp-item-remove {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--amber);
+            color: var(--navy);
+            font-size: 0.7rem;
+            font-weight: 800;
+            border: none;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .pfp-item.active .pfp-item-remove {
+            display: flex;
+        }
+
+        /* Character Selector */
+        .char-selector {
+            margin-bottom: 24px;
+        }
+
+        .char-selector-title {
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--teal);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .char-selector-title::before {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 201, 184, 0.3));
+        }
+
+        .char-selector-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(0, 201, 184, 0.3), transparent);
+        }
+
+        .char-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .char-option {
+            position: relative;
+            background: rgba(4, 13, 31, 0.6);
+            border: 2px solid rgba(0, 201, 184, 0.15);
+            border-radius: 14px;
+            padding: 6px;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .char-option:hover {
+            border-color: rgba(0, 201, 184, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .char-option.active {
+            border-color: var(--gold);
+            background: rgba(240, 180, 41, 0.08);
+            box-shadow: 0 0 16px rgba(240, 180, 41, 0.15);
+        }
+
+        .char-option img {
+            width: 100%;
+            height: 55px;
+            object-fit: contain;
+            border-radius: 10px;
+            pointer-events: none;
+        }
+
+        .char-option-name {
+            font-size: 0.65rem;
+            color: var(--muted);
+            font-weight: 700;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .char-option.active .char-option-name {
+            color: var(--gold2);
+        }
+
+        .pfp-note {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-top: 20px;
+            padding: 12px;
+            background: rgba(0, 201, 184, 0.04);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 201, 184, 0.08);
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .lore-inner {
@@ -970,6 +1449,29 @@
             .hero h1 {
                 font-size: clamp(2rem, 10vw, 3.5rem);
             }
+
+            .pfp-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .pfp-preview-wrap {
+                position: static;
+                order: -1;
+            }
+
+            #pfpCanvas {
+                width: 300px;
+                height: 300px;
+            }
+
+            .pfp-panel {
+                padding: 20px;
+            }
+
+            .pfp-items {
+                grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+            }
         }
 
         @media (max-width: 480px) {
@@ -979,6 +1481,21 @@
 
             section {
                 padding: 60px 4vw;
+            }
+
+            #pfpCanvas {
+                width: 260px;
+                height: 260px;
+            }
+
+            .pfp-actions {
+                gap: 8px;
+            }
+
+            .pfp-btn-random,
+            .pfp-btn-download {
+                padding: 10px 20px;
+                font-size: 0.85rem;
             }
         }
     </style>
@@ -1001,6 +1518,7 @@
             <li><a href="#tokenomics">Tokenomics</a></li>
             <li><a href="#buy">How to Buy</a></li>
             <li><a href="#roadmap">Roadmap</a></li>
+            <li><a href="#pfp">PFP</a></li>
             <li><a href="#community" class="nav-btn">Join</a></li>
         </ul>
     </nav>
@@ -1009,15 +1527,16 @@
     <section class="hero">
         <div class="bg-glow1"></div>
         <div class="bg-glow2"></div>
-        <div class="hero-label">✦ Born Under a Falling Star ✦</div>
+        <div class="hero-label">&#10022; Born Under a Falling Star &#10022;</div>
         <img src="fox.jpg" alt="Ollie Waterwhisker" class="hero-mascot">
         <h1>Ollie Waterwhisker</h1>
         <div class="hero-ticker">$OLLIE on Solana</div>
-        <p class="hero-tagline">A tiny fox who believes a magical world hides beneath the lake's surface — brave,
+        <p class="hero-tagline">A tiny fox who believes a magical world hides beneath the lake's surface &#8212; brave,
             curious, and destined for something extraordinary.</p>
         <div class="hero-buttons">
-            <a href="https://pump.fun" target="_blank" class="btn-primary">🚀 Buy on Pump.fun</a>
-            <a href="#lore" class="btn-secondary">📖 Ollie's Story</a>
+            <a href="https://pump.fun/coin/AdRHmsSGoWQ5ZJbjnUfPcDwVnxYUDVy7jvu7bVfMpump" target="_blank"
+                class="btn-primary">&#128640; Buy on Pump.fun</a>
+            <a href="#lore" class="btn-secondary">&#128214; Ollie's Story</a>
         </div>
         <div class="hero-contract">Contract: <span>Coming Soon on Pump.fun</span></div>
     </section>
@@ -1037,7 +1556,8 @@
             <div class="lore-text">
                 <h2>The Fox Who Touched the Stars</h2>
                 <p>
-                    <strong>Ollie Waterwhisker</strong> was born on the night of the Great Autumn Meteor Shower — a tiny
+                    <strong>Ollie Waterwhisker</strong> was born on the night of the Great Autumn Meteor Shower &#8212;
+                    a tiny
                     fox with wild spiky brown fur and eyes that sparkled like twin emeralds catching starlight. The
                     elders of Fernwood Hollow called him <strong>the Star-Touched One</strong>, for a fallen star had
                     grazed the lake's surface the very moment he drew his first breath.
@@ -1051,16 +1571,16 @@
                 <p>
                     <em>"There are cities down there,"</em> he'd whisper, crafting miniature boats from fallen leaves
                     and acorn caps. <em>"Cities made of light and wonder. And I will find them."</em> Brave, kind, and
-                    endlessly curious — Ollie never stopped believing.
+                    endlessly curious &#8212; Ollie never stopped believing.
                 </p>
                 <div class="lore-stat-row">
-                    <div class="lore-stat"><span class="stat-num">∞</span>
+                    <div class="lore-stat"><span class="stat-num">&#8734;</span>
                         <div class="stat-label">Curiosity</div>
                     </div>
-                    <div class="lore-stat"><span class="stat-num">★</span>
+                    <div class="lore-stat"><span class="stat-num">&#9733;</span>
                         <div class="stat-label">Star-Touched</div>
                     </div>
-                    <div class="lore-stat"><span class="stat-num">🌊</span>
+                    <div class="lore-stat"><span class="stat-num">&#127754;</span>
                         <div class="stat-label">Lake Dreamer</div>
                     </div>
                 </div>
@@ -1078,10 +1598,11 @@
             <div class="tl-item">
                 <div class="tl-dot"></div>
                 <div class="tl-card">
-                    <div class="tl-icon">🌟</div>
+                    <div class="tl-icon">&#127775;</div>
                     <h3>Birth of the Star-Touched</h3>
                     <p>On the night of the Great Meteor Shower, a star fell into Mirror Lake. In that same instant,
-                        Ollie opened his eyes for the very first time — and the lake glowed gold for seven heartbeats.
+                        Ollie opened his eyes for the very first time &#8212; and the lake glowed gold for seven
+                        heartbeats.
                     </p>
                 </div>
             </div>
@@ -1089,7 +1610,7 @@
             <div class="tl-item">
                 <div class="tl-dot"></div>
                 <div class="tl-card">
-                    <div class="tl-icon">🍃</div>
+                    <div class="tl-icon">&#127811;</div>
                     <h3>The First Leaf Boat</h3>
                     <p>At age three, Ollie built his first boat from a magnolia leaf and a bent twig. He named it
                         <em>"The Deep Seeker"</em> and launched it onto the lake at dawn, watching it drift toward the
@@ -1101,10 +1622,11 @@
             <div class="tl-item">
                 <div class="tl-dot"></div>
                 <div class="tl-card">
-                    <div class="tl-icon">👁️</div>
+                    <div class="tl-icon">&#128065;&#65039;</div>
                     <h3>The Vision Beneath</h3>
                     <p>During a thunderstorm, Ollie fell into the shallows and, in those suspended underwater seconds,
-                        <strong>he saw it</strong> — luminous shapes, ancient towers of coral and crystal, beings of
+                        <strong>he saw it</strong> &#8212; luminous shapes, ancient towers of coral and crystal, beings
+                        of
                         pure light swirling in an eternal dance. He surfaced gasping, changed forever.
                     </p>
                 </div>
@@ -1113,9 +1635,10 @@
             <div class="tl-item">
                 <div class="tl-dot"></div>
                 <div class="tl-card">
-                    <div class="tl-icon">🗺️</div>
+                    <div class="tl-icon">&#128506;&#65039;</div>
                     <h3>The Map of Depths</h3>
-                    <p>Armed with charcoal and birch bark, Ollie began charting the lake's behavior — where bubbles
+                    <p>Armed with charcoal and birch bark, Ollie began charting the lake's behavior &#8212; where
+                        bubbles
                         rose, where the water turned silver at night, where frogs refused to swim. He called it <em>The
                             Map of the Hidden Kingdom.</em></p>
                 </div>
@@ -1124,10 +1647,12 @@
             <div class="tl-item">
                 <div class="tl-dot"></div>
                 <div class="tl-card">
-                    <div class="tl-icon">🚀</div>
-                    <h3>The Great Dive — Coming Soon</h3>
-                    <p>The elders say that when the conditions align — <strong>a falling star, a full moon, and a heart
-                            pure with wonder</strong> — the lake will open. Ollie is still preparing. Still building.
+                    <div class="tl-icon">&#128640;</div>
+                    <h3>The Great Dive &#8212; Coming Soon</h3>
+                    <p>The elders say that when the conditions align &#8212; <strong>a falling star, a full moon, and a
+                            heart
+                            pure with wonder</strong> &#8212; the lake will open. Ollie is still preparing. Still
+                        building.
                         Still believing. And so are we.</p>
                 </div>
             </div>
@@ -1142,41 +1667,42 @@
         <p class="section-sub">Simple. Fair. Community-driven. Just like Ollie.</p>
         <div class="token-grid">
             <div class="token-card">
-                <div class="token-icon">🪙</div>
+                <div class="token-icon">&#129513;</div>
                 <span class="token-value">1B</span>
                 <div class="token-label">Total Supply</div>
-                <div class="token-desc">One billion $OLLIE tokens — one for every star Ollie has wished upon</div>
+                <div class="token-desc">One billion $OLLIE tokens &#8212; one for every star Ollie has wished upon</div>
             </div>
             <div class="token-card">
-                <div class="token-icon">🔥</div>
+                <div class="token-icon">&#128293;</div>
                 <span class="token-value">0%</span>
                 <div class="token-label">Dev Allocation</div>
                 <div class="token-desc">Fair launch via Pump.fun. No pre-sale. No insider bags. Pure community.</div>
             </div>
             <div class="token-card">
-                <div class="token-icon">💧</div>
+                <div class="token-icon">&#128167;</div>
                 <span class="token-value">100%</span>
                 <div class="token-label">Liquidity</div>
                 <div class="token-desc">All tokens available on the open market from day one. Locked forever.</div>
             </div>
             <div class="token-card">
-                <div class="token-icon">🛡️</div>
+                <div class="token-icon">&#128737;&#65039;</div>
                 <span class="token-value">0%</span>
                 <div class="token-label">Buy/Sell Tax</div>
-                <div class="token-desc">No hidden fees. No traps. Trade freely like Ollie swims — without limits.</div>
+                <div class="token-desc">No hidden fees. No traps. Trade freely like Ollie swims &#8212; without limits.
+                </div>
             </div>
             <div class="token-card">
-                <div class="token-icon">🔐</div>
+                <div class="token-icon">&#128272;</div>
                 <span class="token-value">Renounced</span>
                 <div class="token-label">Contract</div>
                 <div class="token-desc">Ownership renounced at launch. No minting. No freezing. Fully decentralized.
                 </div>
             </div>
             <div class="token-card">
-                <div class="token-icon">⚡</div>
+                <div class="token-icon">&#9889;</div>
                 <span class="token-value">Solana</span>
                 <div class="token-label">Network</div>
-                <div class="token-desc">Lightning-fast, ultra-low fees. Ollie travels fast — so should your
+                <div class="token-desc">Lightning-fast, ultra-low fees. Ollie travels fast &#8212; so should your
                     transactions.</div>
             </div>
         </div>
@@ -1204,19 +1730,21 @@
             <div class="buy-step">
                 <div class="step-num">3</div>
                 <h3>Visit Pump.fun</h3>
-                <p>Go to <a href="https://pump.fun" target="_blank">pump.fun</a>, connect your wallet, and search for
+                <p>Go to <a href="https://pump.fun/coin/AdRHmsSGoWQ5ZJbjnUfPcDwVnxYUDVy7jvu7bVfMpump"
+                        target="_blank">pump.fun</a>, connect your wallet, and search for
                     <strong>$OLLIE</strong> or paste the contract address.
                 </p>
             </div>
             <div class="buy-step">
                 <div class="step-num">4</div>
-                <h3>Buy $OLLIE 🎉</h3>
+                <h3>Buy $OLLIE &#127881;</h3>
                 <p>Enter the amount of SOL you want to swap, confirm the transaction, and welcome to Ollie's underwater
                     kingdom!</p>
             </div>
         </div>
         <div class="buy-cta">
-            <a href="https://pump.fun" target="_blank" class="btn-primary">🌊 Dive in on Pump.fun</a>
+            <a href="https://pump.fun/coin/AdRHmsSGoWQ5ZJbjnUfPcDwVnxYUDVy7jvu7bVfMpump" target="_blank"
+                class="btn-primary">&#127754; Dive in on Pump.fun</a>
         </div>
     </section>
 
@@ -1228,8 +1756,8 @@
         <div class="roadmap-cards">
             <div class="rm-card active">
                 <div class="rm-badge live">Live</div>
-                <div class="rm-phase done">Phase 1 — The Birth</div>
-                <h3>🌟 The Falling Star</h3>
+                <div class="rm-phase done">Phase 1 &#8212; The Birth</div>
+                <h3>&#127775; The Falling Star</h3>
                 <ul class="rm-list">
                     <li>Fair launch on Pump.fun</li>
                     <li>Website & Lore launch</li>
@@ -1240,8 +1768,8 @@
             </div>
             <div class="rm-card">
                 <div class="rm-badge next">Next</div>
-                <div class="rm-phase active">Phase 2 — The Lake</div>
-                <h3>🌊 The First Dive</h3>
+                <div class="rm-phase active">Phase 2 &#8212; The Lake</div>
+                <h3>&#127754; The First Dive</h3>
                 <ul class="rm-list">
                     <li>1,000+ holders</li>
                     <li>CoinGecko & CMC listing</li>
@@ -1251,8 +1779,8 @@
                 </ul>
             </div>
             <div class="rm-card">
-                <div class="rm-phase soon">Phase 3 — The Kingdom</div>
-                <h3>🏰 The Hidden World</h3>
+                <div class="rm-phase soon">Phase 3 &#8212; The Kingdom</div>
+                <h3>&#127984; The Hidden World</h3>
                 <ul class="rm-list">
                     <li>5,000+ holders</li>
                     <li>$OLLIE NFT collection</li>
@@ -1262,8 +1790,8 @@
                 </ul>
             </div>
             <div class="rm-card">
-                <div class="rm-phase soon">Phase 4 — The Legend</div>
-                <h3>✨ The Great Dive</h3>
+                <div class="rm-phase soon">Phase 4 &#8212; The Legend</div>
+                <h3>&#10024; The Great Dive</h3>
                 <ul class="rm-list">
                     <li>10,000+ holders</li>
                     <li>Animated Ollie series</li>
@@ -1275,6 +1803,73 @@
         </div>
     </section>
 
+    <!-- PFP GENERATOR -->
+    <section id="pfp" class="pfp-section">
+        <div class="section-divider"></div>
+        <h2 class="section-title">PFP Generator</h2>
+        <p class="section-sub">Dress up Ollie with magical accessories from the lake and beyond</p>
+
+        <div class="pfp-container">
+            <!-- LEFT: Preview -->
+            <div class="pfp-preview-wrap">
+                <div class="pfp-canvas-wrap" id="pfpCanvasWrap">
+                    <canvas id="pfpCanvas" width="400" height="400"></canvas>
+                    <!-- Accessory overlay for drag/resize -->
+                    <div id="accOverlay"></div>
+                </div>
+                <div class="pfp-actions">
+                    <button class="pfp-btn-random" onclick="randomizePFP()">&#127922; Randomize</button>
+                    <button class="pfp-btn-clear" onclick="clearAll()">&#10060; Clear All</button>
+                    <button class="pfp-btn-download" onclick="downloadPFP()">&#11015; Download PFP</button>
+                </div>
+            </div>
+
+            <!-- RIGHT: Accessory Panel -->
+            <div class="pfp-panel">
+                <div class="pfp-panel-title">&#10022; Choose Accessories &#10022;</div>
+
+
+
+                <!-- HATS -->
+                <div class="pfp-category">
+                    <div class="pfp-category-title">&#127913; Headwear</div>
+                    <div class="pfp-items" id="hatItems"></div>
+                </div>
+
+                <!-- GLASSES -->
+                <div class="pfp-category">
+                    <div class="pfp-category-title">&#128374;&#65039; Eyewear</div>
+                    <div class="pfp-items" id="glassesItems"></div>
+                </div>
+
+                <!-- NECKLACE -->
+                <div class="pfp-category">
+                    <div class="pfp-category-title">&#128255; Neckwear</div>
+                    <div class="pfp-items" id="neckItems"></div>
+                </div>
+
+                <!-- AURA -->
+                <div class="pfp-category">
+                    <div class="pfp-category-title">&#10024; Aura & Effects</div>
+                    <div class="pfp-items" id="auraItems"></div>
+                </div>
+
+                <div class="pfp-note">
+                    <div style="margin-bottom:8px;font-weight:800;color:var(--teal2);font-size:0.82rem;">&#127381; How
+                        to customize your PFP</div>
+                    <div style="display:flex;flex-direction:column;gap:5px;text-align:left;">
+                        <span>&#128070; <strong>Click</strong> any accessory to toggle it on/off</span>
+                        <span>&#9995; <strong>Drag</strong> an accessory on the preview to reposition it</span>
+                        <span>&#8596; <strong>Drag the corner handles</strong> (gold dots) to resize</span>
+                        <span>&#10060; Hover an accessory to reveal <strong>Reset</strong> &amp; <strong>Remove</strong>
+                            buttons</span>
+                        <span>&#11015; <strong>Download PFP</strong> exports exactly what you see in the preview</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- COMMUNITY -->
     <section id="community" class="community-section">
         <div class="section-divider"></div>
@@ -1282,24 +1877,25 @@
         <p class="section-sub">Every explorer needs a crew. Ollie's is growing every day.</p>
         <div class="social-grid">
             <a href="#" class="social-btn">
-                <span class="social-icon">𝕏</span> Twitter / X
+                <span class="social-icon">&#120143;</span> Twitter / X
             </a>
-            <a href="https://pump.fun" target="_blank" class="social-btn">
-                <span class="social-icon">🚀</span> Pump.fun
+            <a href="https://pump.fun/coin/AdRHmsSGoWQ5ZJbjnUfPcDwVnxYUDVy7jvu7bVfMpump" target="_blank"
+                class="social-btn">
+                <span class="social-icon">&#128640;</span> Pump.fun
             </a>
         </div>
         <blockquote class="community-quote">
             "Somewhere deep beneath the surface of the lake, there are wonders that no one has ever seen. I can feel
-            them. And one day, I will reach them — and I won't go alone."
-            <br><br>— <strong style="color:var(--gold)">Ollie Waterwhisker</strong>, Lake Journal, Page 1
+            them. And one day, I will reach them &#8212; and I won't go alone."
+            <br><br>&#8212; <strong style="color:var(--gold)">Ollie Waterwhisker</strong>, Lake Journal, Page 1
         </blockquote>
     </section>
 
     <!-- FOOTER -->
     <footer>
-        <div class="foot-logo">$OLLIE — Ollie Waterwhisker</div>
-        <p>Solana Memecoin · Community-Driven · Born Under a Falling Star</p>
-        <p style="color:var(--teal);font-size:0.82rem;">© 2026 Ollie Waterwhisker. All rights reserved.</p>
+        <div class="foot-logo">$OLLIE &#8212; Ollie Waterwhisker</div>
+        <p>Solana Memecoin &#183; Community-Driven &#183; Born Under a Falling Star</p>
+        <p style="color:var(--teal);font-size:0.82rem;">&#169; 2026 Ollie Waterwhisker. All rights reserved.</p>
         <p class="disclaimer">$OLLIE is a meme coin with no intrinsic value or expectation of financial return. This is
             not financial advice. Crypto investments carry significant risk. Always do your own research (DYOR). Never
             invest more than you can afford to lose.</p>
@@ -1399,6 +1995,586 @@
             el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
             observer.observe(el);
         });
+
+        // ===== PFP GENERATOR =====
+        const canvasPFP = document.getElementById("pfpCanvas");
+        const ctxPFP = canvasPFP.getContext("2d");
+        const accOverlay = document.getElementById("accOverlay");
+
+        // ===== CHARACTER DEFINITIONS =====
+        const CHARACTERS = {
+            transparent: { id: 'transparent', name: 'Clean Ollie', src: 'char_original.png', thumb: 'char_original.png' }
+        };
+
+        // ===== ACCESSORY METADATA =====
+        const ACCESSORIES = {
+            hats: [
+                { id: 'star_crown', name: 'Star Crown', src: 'accessories/star_crown.png' },
+                { id: 'water_crown', name: 'Lake Crown', src: 'accessories/water_crown.png' },
+                { id: 'gold_crown', name: 'Royal Crown', src: 'accessories/gold_crown.png' },
+                { id: 'wizard_hat', name: 'Wizard Hat', src: 'accessories/wizard_hat.png' },
+                { id: 'leaf_boat', name: 'Leaf Boat', src: 'accessories/leaf_boat.png' },
+                { id: 'pirate_hat', name: 'Pirate Hat', src: 'accessories/pirate_hat.png' },
+                { id: 'bandana', name: 'Bandana', src: 'accessories/bandana.png' },
+                { id: 'acorn_cap', name: 'Acorn Cap', src: 'accessories/acorn_cap.png' },
+            ],
+            glasses: [
+                { id: 'goggles', name: 'Lake Goggles', src: 'accessories/goggles.png' },
+                { id: 'sunglasses', name: 'Gold Shades', src: 'accessories/sunglasses.png' },
+                { id: 'heart_glasses', name: 'Love Specs', src: 'accessories/heart_glasses.png' },
+            ],
+            neck: [
+                { id: 'necklace', name: 'Water Gem', src: 'accessories/necklace.png' },
+            ],
+            aura: [
+                { id: 'star_aura', name: 'Star Glow', src: 'accessories/star_aura.png', layer: 'back' },
+                { id: 'water_aura', name: 'Lake Ripple', src: 'accessories/water_aura.png', layer: 'back' },
+                { id: 'bubbles', name: 'Bubbles', src: 'accessories/bubbles.png', layer: 'back' },
+            ]
+        };
+
+        const DEFAULT_POSITIONS = {
+            star_crown: { x: 50, y: 30, w: 300, h: 125 },
+            water_crown: { x: 55, y: 33, w: 290, h: 120 },
+            gold_crown: { x: 55, y: 25, w: 290, h: 135 },
+            wizard_hat: { x: 75, y: 10, w: 250, h: 210 },
+            leaf_boat: { x: 60, y: 37, w: 280, h: 125 },
+            pirate_hat: { x: 55, y: 30, w: 290, h: 115 },
+            bandana: { x: 55, y: 55, w: 290, h: 95 },
+            acorn_cap: { x: 80, y: 30, w: 240, h: 130 },
+            goggles: { x: 85, y: 143, w: 230, h: 78 },
+            sunglasses: { x: 92, y: 153, w: 216, h: 68 },
+            heart_glasses: { x: 85, y: 145, w: 230, h: 75 },
+            necklace: { x: 95, y: 270, w: 210, h: 85 },
+            star_aura: { x: 0, y: 0, w: 400, h: 400 },
+            water_aura: { x: 20, y: 20, w: 360, h: 360 },
+            bubbles: { x: 0, y: 0, w: 400, h: 400 },
+        };
+
+        // ===== STATE =====
+        let currentCharId = 'transparent';
+        let baseImg = null;
+        let activeAccessories = new Set();
+        let loadedImages = {};
+        let accState = {}; // { id: { x, y, w, h } } in canvas px (0-400)
+
+        // ===== IMAGE LOADING =====
+        function loadImage(src) {
+            if (loadedImages[src]) return Promise.resolve(loadedImages[src]);
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.crossOrigin = "anonymous";
+                img.onload = () => { loadedImages[src] = img; resolve(img); };
+                img.onerror = () => resolve(null);
+                img.src = src;
+            });
+        }
+
+        async function preloadAll() {
+            const promises = [];
+            Object.values(CHARACTERS).forEach(c => promises.push(loadImage(c.src).catch(() => null)));
+            [...ACCESSORIES.hats, ...ACCESSORIES.glasses, ...ACCESSORIES.neck, ...ACCESSORIES.aura]
+                .forEach(a => promises.push(loadImage(a.src).catch(() => null)));
+            await Promise.all(promises);
+        }
+
+        function getCurrentCharacter() { return CHARACTERS[currentCharId] || CHARACTERS['transparent']; }
+
+        function findAccessoryMeta(id) {
+            return [...ACCESSORIES.hats, ...ACCESSORIES.glasses, ...ACCESSORIES.neck, ...ACCESSORIES.aura].find(a => a.id === id);
+        }
+
+        // ===== DRAW BACKGROUND HELPER =====
+        function drawCanvasBackground(targetCtx, size) {
+            targetCtx.clearRect(0, 0, size, size);
+
+            if (currentCharId === 'transparent') {
+                // Dynamic Starry/Water Lake Background for Clean Ollie
+                const skyGrad = targetCtx.createLinearGradient(0, 0, 0, size);
+                skyGrad.addColorStop(0, '#040d1f'); // navy
+                skyGrad.addColorStop(0.5, '#061128'); // deep
+                skyGrad.addColorStop(1, 'rgba(0, 201, 184, 0.4)'); // teal water bottom
+                targetCtx.fillStyle = skyGrad;
+                targetCtx.fillRect(0, 0, size, size);
+
+                // Add glowing stars/orbs deterministically to avoid flicker
+                targetCtx.globalCompositeOperation = 'screen';
+                for (let i = 0; i < 35; i++) {
+                    let r = (Math.sin(i * 12.34) * 0.5 + 0.5) * 2.5 + 0.5;
+                    let x = (Math.cos(i * 34.56) * 0.5 + 0.5) * size;
+                    let y = (Math.sin(i * 56.78) * 0.5 + 0.5) * size;
+
+                    targetCtx.beginPath();
+                    targetCtx.arc(x, y, r, 0, Math.PI * 2);
+                    targetCtx.fillStyle = `rgba(0, 245, 228, ${(Math.sin(i) * 0.5 + 0.5) * 0.6 + 0.2})`;
+                    targetCtx.fill();
+
+                    // glow
+                    targetCtx.beginPath();
+                    targetCtx.arc(x, y, r * 4, 0, Math.PI * 2);
+                    const glow = targetCtx.createRadialGradient(x, y, 0, x, y, r * 4);
+                    glow.addColorStop(0, `rgba(240, 180, 41, ${(Math.cos(i) * 0.5 + 0.5) * 0.3})`);
+                    glow.addColorStop(1, 'rgba(240, 180, 41, 0)');
+                    targetCtx.fillStyle = glow;
+                    targetCtx.fill();
+                }
+
+                // Add a glowing central aura behind Ollie
+                const moonGrad = targetCtx.createRadialGradient(200, 200, 20, 200, 200, 180);
+                moonGrad.addColorStop(0, 'rgba(0, 201, 184, 0.25)'); // teal inner glow
+                moonGrad.addColorStop(0.6, 'rgba(240, 180, 41, 0.1)'); // gold mid
+                moonGrad.addColorStop(1, 'transparent');
+                targetCtx.fillStyle = moonGrad;
+                targetCtx.fillRect(0, 0, size, size);
+
+                targetCtx.globalCompositeOperation = 'source-over';
+            } else {
+                // Standard BG gradient for others
+                const bgGrad = targetCtx.createRadialGradient(200, 200, 0, 200, 200, 200);
+                bgGrad.addColorStop(0, 'rgba(0,60,80,0.15)');
+                bgGrad.addColorStop(1, 'rgba(4,13,31,0.4)');
+                targetCtx.fillStyle = bgGrad;
+                targetCtx.fillRect(0, 0, size, size);
+            }
+        }
+
+        // ===== DRAW BASE: bg → all auras (behind) → character → vignette =====
+        async function drawBaseCanvas() {
+            const size = 400;
+            drawCanvasBackground(ctxPFP, size);
+
+            // ── LAYER 1: ALL auras & effects BEFORE character (behind) ──
+            for (const aura of ACCESSORIES.aura) {
+                if (!activeAccessories.has(aura.id)) continue;
+                const st = accState[aura.id];
+                if (!st) continue;
+                const img = await loadImage(aura.src);
+                if (img) ctxPFP.drawImage(img, st.x, st.y, st.w, st.h);
+            }
+
+            // ── LAYER 2: Character always on top of aura ──
+            if (baseImg && baseImg.complete && baseImg.naturalWidth > 0) {
+                ctxPFP.save();
+                ctxPFP.beginPath();
+                ctxPFP.arc(200, 200, 198, 0, Math.PI * 2);
+                ctxPFP.clip();
+                // Blend the Clean Ollie character into the scene
+                if (currentCharId === 'transparent') {
+                    // Add an outer shadow so he pops from the background
+                    ctxPFP.shadowColor = 'rgba(0, 245, 228, 0.4)';
+                    ctxPFP.shadowBlur = 25;
+                    ctxPFP.shadowOffsetX = 0;
+                    ctxPFP.shadowOffsetY = 0;
+                }
+
+                ctxPFP.drawImage(baseImg, 0, 25, size, size);
+
+                if (currentCharId === 'transparent') {
+                    // Reset shadow
+                    ctxPFP.shadowColor = 'transparent';
+                    ctxPFP.shadowBlur = 0;
+
+                    // Note: Front lighting is now applied in the download step AFTER accessories
+                    // to make accessories blend in with the character.
+                }
+
+                ctxPFP.restore();
+            }
+
+            // Vignette
+            const vig = ctxPFP.createRadialGradient(200, 200, 140, 200, 200, 200);
+            vig.addColorStop(0, 'rgba(0,0,0,0)');
+            vig.addColorStop(1, 'rgba(0,0,0,0.25)');
+            ctxPFP.fillStyle = vig;
+            ctxPFP.fillRect(0, 0, size, size);
+        }
+
+        // ===== DISPLAY SCALE =====
+        function getDisplayScale() {
+            const rect = canvasPFP.getBoundingClientRect();
+            return (rect.width || canvasPFP.offsetWidth || 400) / 400;
+        }
+
+        // ===== REBUILD OVERLAY (draggable/resizable divs over canvas) =====
+        function rebuildOverlay() {
+            accOverlay.innerHTML = '';
+            const scale = getDisplayScale();
+            // ALL auras (back + front) are drawn on canvas — give them transparent drag handles
+            const auraHandleIds = ACCESSORIES.aura.map(a => a.id).filter(id => activeAccessories.has(id));
+            // Front-layer accessories on overlay (rendered on top of canvas)
+            // NOTE: All auras (back AND front/bubbles) are drawn on canvas — only hats/neck/glasses go in overlay as real images
+            const frontIds = [
+                ...ACCESSORIES.hats.map(a => a.id),
+                ...ACCESSORIES.neck.map(a => a.id),
+                ...ACCESSORIES.glasses.map(a => a.id),
+            ].filter(id => activeAccessories.has(id));
+
+            // Build all: back auras first (low z-index, semi-transparent for drag), then front
+            const allIds = [...auraHandleIds, ...frontIds];
+
+            allIds.forEach(id => {
+                const meta = findAccessoryMeta(id);
+                const st = accState[id];
+                if (!meta || !st) return;
+                const isBackAura = ACCESSORIES.aura.some(a => a.id === id);
+
+                const el = document.createElement('div');
+                el.className = 'acc-draggable' + (isBackAura ? ' back-aura-handle' : '');
+                el.dataset.id = id;
+                el.style.cssText = `left:${st.x * scale}px;top:${st.y * scale}px;width:${st.w * scale}px;height:${st.h * scale}px;${isBackAura ? 'z-index:0;' : ''}`;
+
+                // Controls
+                const ctrl = document.createElement('div');
+                ctrl.className = 'acc-controls';
+                const resetBtn = document.createElement('button');
+                resetBtn.className = 'acc-ctrl-btn';
+                resetBtn.textContent = '↺ Reset';
+                resetBtn.addEventListener('mousedown', e => { e.stopPropagation(); resetAccPosition(id); });
+                const delBtn = document.createElement('button');
+                delBtn.className = 'acc-ctrl-btn del';
+                delBtn.textContent = '✕ Hapus';
+                delBtn.addEventListener('mousedown', e => { e.stopPropagation(); toggleAccessory(id); });
+                ctrl.append(resetBtn, delBtn);
+                el.appendChild(ctrl);
+
+                // Image: invisible for back auras (canvas renders them), visible for others
+                const img = document.createElement('img');
+                img.src = meta.src;
+                img.draggable = false;
+                if (isBackAura) img.style.opacity = '0';
+                el.appendChild(img);
+
+                // Resize handles
+                ['tl', 'tr', 'bl', 'br'].forEach(pos => {
+                    const h = document.createElement('div');
+                    h.className = `resize-handle ${pos}`;
+                    h.addEventListener('mousedown', e => { e.stopPropagation(); startResize(e, id, pos); });
+                    h.addEventListener('touchstart', e => { e.stopPropagation(); startResizeTouch(e, id, pos); }, { passive: false });
+                    el.appendChild(h);
+                });
+
+                // Drag
+                el.addEventListener('mousedown', e => {
+                    if (e.target.classList.contains('resize-handle') || e.target.classList.contains('acc-ctrl-btn')) return;
+                    startDrag(e, id);
+                });
+                el.addEventListener('touchstart', e => {
+                    if (e.target.classList.contains('resize-handle') || e.target.classList.contains('acc-ctrl-btn')) return;
+                    startDragTouch(e, id);
+                }, { passive: false });
+
+                accOverlay.appendChild(el);
+            });
+        }
+
+        function updateAccElement(id) {
+            const meta = findAccessoryMeta(id);
+            const isAura = meta && ACCESSORIES.aura.some(a => a.id === id);
+            if (isAura) {
+                // All auras live on canvas — redraw canvas
+                drawBaseCanvas();
+                return;
+            }
+            const el = accOverlay.querySelector(`[data-id="${id}"]`);
+            if (!el) return;
+            const sc = getDisplayScale();
+            const st = accState[id];
+            el.style.left = (st.x * sc) + 'px'; el.style.top = (st.y * sc) + 'px';
+            el.style.width = (st.w * sc) + 'px'; el.style.height = (st.h * sc) + 'px';
+        }
+
+        function resetAccPosition(id) {
+            const def = DEFAULT_POSITIONS[id];
+            if (def) { accState[id] = { ...def }; updateAccElement(id); }
+        }
+
+        // ===== DRAG (mouse) =====
+        let dragState = null;
+        function startDrag(e, id) {
+            e.preventDefault();
+            const sc = getDisplayScale(), st = accState[id];
+            dragState = { id, sx: e.clientX, sy: e.clientY, ox: st.x, oy: st.y, sc };
+            document.addEventListener('mousemove', onDragMove);
+            document.addEventListener('mouseup', onDragEnd);
+        }
+        function onDragMove(e) {
+            if (!dragState) return;
+            const { id, sx, sy, ox, oy, sc } = dragState;
+            accState[id].x = ox + (e.clientX - sx) / sc;
+            accState[id].y = oy + (e.clientY - sy) / sc;
+            updateAccElement(id);
+        }
+        function onDragEnd() {
+            dragState = null;
+            document.removeEventListener('mousemove', onDragMove);
+            document.removeEventListener('mouseup', onDragEnd);
+        }
+
+        // ===== DRAG (touch) =====
+        let touchDragState = null;
+        function startDragTouch(e, id) {
+            e.preventDefault();
+            const t = e.touches[0], sc = getDisplayScale(), st = accState[id];
+            touchDragState = { id, sx: t.clientX, sy: t.clientY, ox: st.x, oy: st.y, sc };
+            document.addEventListener('touchmove', onDragTouchMove, { passive: false });
+            document.addEventListener('touchend', onDragTouchEnd);
+        }
+        function onDragTouchMove(e) {
+            if (!touchDragState) return;
+            e.preventDefault();
+            const t = e.touches[0], { id, sx, sy, ox, oy, sc } = touchDragState;
+            accState[id].x = ox + (t.clientX - sx) / sc;
+            accState[id].y = oy + (t.clientY - sy) / sc;
+            updateAccElement(id);
+        }
+        function onDragTouchEnd() {
+            touchDragState = null;
+            document.removeEventListener('touchmove', onDragTouchMove);
+            document.removeEventListener('touchend', onDragTouchEnd);
+        }
+
+        // ===== RESIZE (mouse) =====
+        let resizeState = null;
+        function startResize(e, id, corner) {
+            e.preventDefault();
+            const sc = getDisplayScale(), st = accState[id];
+            resizeState = { id, corner, sx: e.clientX, sy: e.clientY, ox: st.x, oy: st.y, ow: st.w, oh: st.h, sc };
+            document.addEventListener('mousemove', onResizeMove);
+            document.addEventListener('mouseup', onResizeEnd);
+        }
+        function onResizeMove(e) {
+            if (!resizeState) return;
+            const { id, corner, sx, sy, ox, oy, ow, oh, sc } = resizeState;
+            applyResize(id, corner, (e.clientX - sx) / sc, (e.clientY - sy) / sc, ox, oy, ow, oh);
+        }
+        function onResizeEnd() {
+            resizeState = null;
+            document.removeEventListener('mousemove', onResizeMove);
+            document.removeEventListener('mouseup', onResizeEnd);
+        }
+
+        // ===== RESIZE (touch) =====
+        let touchResizeState = null;
+        function startResizeTouch(e, id, corner) {
+            e.preventDefault();
+            const t = e.touches[0], sc = getDisplayScale(), st = accState[id];
+            touchResizeState = { id, corner, sx: t.clientX, sy: t.clientY, ox: st.x, oy: st.y, ow: st.w, oh: st.h, sc };
+            document.addEventListener('touchmove', onResizeTouchMove, { passive: false });
+            document.addEventListener('touchend', onResizeTouchEnd);
+        }
+        function onResizeTouchMove(e) {
+            if (!touchResizeState) return;
+            e.preventDefault();
+            const t = e.touches[0], { id, corner, sx, sy, ox, oy, ow, oh, sc } = touchResizeState;
+            applyResize(id, corner, (t.clientX - sx) / sc, (t.clientY - sy) / sc, ox, oy, ow, oh);
+        }
+        function onResizeTouchEnd() {
+            touchResizeState = null;
+            document.removeEventListener('touchmove', onResizeTouchMove);
+            document.removeEventListener('touchend', onResizeTouchEnd);
+        }
+
+        function applyResize(id, corner, dx, dy, ox, oy, ow, oh) {
+            const min = 20, st = accState[id];
+            if (corner === 'br') { st.w = Math.max(min, ow + dx); st.h = Math.max(min, oh + dy); }
+            else if (corner === 'bl') { const nw = Math.max(min, ow - dx); st.x = ox + (ow - nw); st.w = nw; st.h = Math.max(min, oh + dy); }
+            else if (corner === 'tr') { st.w = Math.max(min, ow + dx); const nh = Math.max(min, oh - dy); st.y = oy + (oh - nh); st.h = nh; }
+            else if (corner === 'tl') { const nw = Math.max(min, ow - dx), nh = Math.max(min, oh - dy); st.x = ox + (ow - nw); st.y = oy + (oh - nh); st.w = nw; st.h = nh; }
+            updateAccElement(id);
+        }
+
+        // ===== TOGGLE =====
+        function toggleAccessory(id) {
+            if (activeAccessories.has(id)) {
+                activeAccessories.delete(id);
+            } else {
+                activeAccessories.add(id);
+                if (!accState[id]) {
+                    const def = DEFAULT_POSITIONS[id] || { x: 100, y: 100, w: 200, h: 200 };
+                    accState[id] = { ...def };
+                }
+            }
+            updateUI();
+            drawBaseCanvas();
+            rebuildOverlay();
+        }
+
+        function updateUI() {
+            document.querySelectorAll('.pfp-item').forEach(el => el.classList.toggle('active', activeAccessories.has(el.dataset.id)));
+        }
+
+        // ===== DOWNLOAD: composite everything exactly matching preview =====
+        async function downloadPFP() {
+            const size = 400;
+            const off = document.createElement('canvas');
+            off.width = off.height = size;
+            const ctx = off.getContext('2d');
+
+            // BG
+            drawCanvasBackground(ctx, size);
+
+            // ALL auras behind character
+            for (const aura of ACCESSORIES.aura) {
+                if (!activeAccessories.has(aura.id)) continue;
+                const st = accState[aura.id];
+                if (!st) continue;
+                const img = await loadImage(aura.src);
+                if (img) ctx.drawImage(img, st.x, st.y, st.w, st.h);
+            }
+
+            // Character
+            if (baseImg && baseImg.complete && baseImg.naturalWidth > 0) {
+                ctx.save();
+                ctx.beginPath(); ctx.arc(200, 200, 198, 0, Math.PI * 2); ctx.clip();
+
+                if (currentCharId === 'transparent') {
+                    ctx.shadowColor = 'rgba(0, 245, 228, 0.4)';
+                    ctx.shadowBlur = 25;
+                    ctx.shadowOffsetX = 0;
+                    ctx.shadowOffsetY = 0;
+                }
+
+
+                ctx.drawImage(baseImg, 0, 25, size, size);
+
+                if (currentCharId === 'transparent') {
+                    ctx.shadowColor = 'transparent';
+                    ctx.shadowBlur = 0;
+                }
+
+                ctx.restore();
+            }
+
+            // Vignette
+            const vig = ctx.createRadialGradient(200, 200, 140, 200, 200, 200);
+            vig.addColorStop(0, 'rgba(0,0,0,0)'); vig.addColorStop(1, 'rgba(0,0,0,0.25)');
+            ctx.fillStyle = vig; ctx.fillRect(0, 0, size, size);
+
+            // Hats, neck, glasses on top of character
+            const topOrder = [
+                ...ACCESSORIES.hats.map(a => a.id),
+                ...ACCESSORIES.neck.map(a => a.id),
+                ...ACCESSORIES.glasses.map(a => a.id),
+            ];
+            for (const id of topOrder) {
+                if (!activeAccessories.has(id)) continue;
+                const meta = findAccessoryMeta(id);
+                const st = accState[id];
+                if (!meta || !st) continue;
+                const img = await loadImage(meta.src);
+                if (img) {
+                    // Draw drop shadow for accessories to blend
+                    ctx.save();
+                    ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+                    ctx.shadowBlur = 15;
+                    ctx.shadowOffsetY = 10;
+                    ctx.drawImage(img, st.x, st.y, st.w, st.h);
+                    ctx.restore();
+                }
+            }
+
+            // Apply a global front-lighting overlay AFTER drawing accessories
+            // so they blend directly with the character
+            if (currentCharId === 'transparent') {
+                ctx.save();
+                ctx.beginPath(); ctx.arc(200, 200, 198, 0, Math.PI * 2); ctx.clip();
+                ctx.globalCompositeOperation = 'overlay';
+                const light = ctx.createRadialGradient(200, 50, 0, 200, 200, 250);
+                light.addColorStop(0, 'rgba(0, 245, 228, 0.15)');
+                light.addColorStop(1, 'rgba(0, 0, 0, 0.1)');
+                ctx.fillStyle = light;
+                ctx.fillRect(0, 0, size, size);
+                ctx.restore();
+            }
+
+            const link = document.createElement('a');
+            link.download = 'ollie-pfp.png';
+            link.href = off.toDataURL('image/png');
+            link.click();
+        }
+
+        // ===== RANDOMIZE =====
+        function randomizePFP() {
+            activeAccessories.clear(); accState = {};
+            const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+            if (Math.random() > 0.3) { const h = pick(ACCESSORIES.hats); activeAccessories.add(h.id); accState[h.id] = { ...DEFAULT_POSITIONS[h.id] }; }
+            if (Math.random() > 0.5) { const g = pick(ACCESSORIES.glasses); activeAccessories.add(g.id); accState[g.id] = { ...DEFAULT_POSITIONS[g.id] }; }
+            if (Math.random() > 0.6) { const n = pick(ACCESSORIES.neck); activeAccessories.add(n.id); accState[n.id] = { ...DEFAULT_POSITIONS[n.id] }; }
+            if (Math.random() > 0.5) { const a = pick(ACCESSORIES.aura); activeAccessories.add(a.id); accState[a.id] = { ...DEFAULT_POSITIONS[a.id] }; }
+            updateUI(); drawBaseCanvas(); rebuildOverlay();
+        }
+
+        // ===== CLEAR ALL =====
+        function clearAll() {
+            activeAccessories.clear(); accState = {};
+            updateUI(); drawBaseCanvas(); rebuildOverlay();
+        }
+
+        // ===== CHARACTER SWITCH =====
+        function switchCharacter(charId) {
+            if (!CHARACTERS[charId]) return;
+            currentCharId = charId;
+            baseImg = new Image();
+            baseImg.crossOrigin = 'anonymous';
+            baseImg.onload = () => drawBaseCanvas();
+            baseImg.src = CHARACTERS[charId].src;
+            updateCharUI();
+        }
+
+        function updateCharUI() {
+            document.querySelectorAll('.char-option').forEach(el => el.classList.toggle('active', el.dataset.charId === currentCharId));
+        }
+
+        // ===== BUILD UI =====
+        function buildAccessoryPanels() {
+            buildPanel('hatItems', ACCESSORIES.hats);
+            buildPanel('glassesItems', ACCESSORIES.glasses);
+            buildPanel('neckItems', ACCESSORIES.neck);
+            buildPanel('auraItems', ACCESSORIES.aura);
+        }
+
+        function buildPanel(containerId, items) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = '';
+            items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'pfp-item';
+                div.dataset.id = item.id;
+                div.innerHTML = `
+                    <button class="pfp-item-remove" onclick="event.stopPropagation();toggleAccessory('${item.id}')">&#10005;</button>
+                    <img src="${item.src}" alt="${item.name}" loading="lazy">
+                    <span class="pfp-item-name">${item.name}</span>
+                `;
+                div.addEventListener('click', () => toggleAccessory(item.id));
+                container.appendChild(div);
+            });
+        }
+
+        // ===== INIT =====
+        function initPFP() {
+            const char = getCurrentCharacter();
+            baseImg = new Image();
+            baseImg.crossOrigin = 'anonymous';
+            baseImg.onload = () => {
+                preloadAll().then(() => {
+                    buildAccessoryPanels();
+                    drawBaseCanvas();
+                    rebuildOverlay();
+                });
+            };
+            baseImg.src = char.src;
+            if (baseImg.complete && baseImg.naturalWidth > 0) {
+                preloadAll().then(() => {
+                    buildAccessoryPanels();
+                    drawBaseCanvas();
+                    rebuildOverlay();
+                });
+            }
+            window.addEventListener('resize', () => rebuildOverlay());
+        }
+
+        initPFP();
     </script>
 </body>
 
